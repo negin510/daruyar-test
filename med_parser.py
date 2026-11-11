@@ -9,7 +9,7 @@ def parse_prescription(text):
     # الگوهای جستجو
     drug_pattern = r"([آ-یa-zA-Z\s]+)\s*(\d+)\s*(?:میلی‌گرم|mg|گرم)?"
     time_pattern = r"ساعت\s*(\d{1,2})"
-    condition_pattern = r"(ناشتا|قبل از ناهار|قبل از شام|همراه با غذا|قبل از ورزش|بعد از ورزش|قبل از خواب|بعد از غذا)"
+    condition_pattern = r"(ناشتا|قبل از ناهار|قبل از شام|همراه با غذا|قبل از ورزش|بعد از ورزش|قبل از خواب|بعد از غذا|همراه با آب|با معده خالی|قبل از غذا|بعد از حمام|بعد از شستشو)"
 
     drugs = re.findall(drug_pattern, text)
     times = re.findall(time_pattern, text)
