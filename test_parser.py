@@ -20,3 +20,8 @@ def test_condition_extraction():
     text = "متفورمین ۵۰۰ ناشتا"
     result = parse_prescription(text)
     assert result[0]['condition'] == "ناشتا"
+
+def test_empty_text():
+    text = ""
+    result = parse_prescription(text)
+    assert len(result) == 0
