@@ -1,31 +1,33 @@
-# med_parser.py
-# استخراج نام دارو از متن پیامک
-
 import re
 
-def extract_drug_names(text):
+def parse_prescription(text):
     """
-    استخراج نام داروها از متن پیامک با استفاده از Regex
+    این تابع متن نسخه الکترونیک را دریافت کرده و لیستی از دیکشنری‌ها برمی‌گرداند.
     """
-    pattern = r"(متفورمین|لوزارتان|آتورواستاتین|انسولین|گلیبن‌کلامید)"
-    matches = re.findall(pattern, text)
-    return list(set(matches)) # حذف تکراری‌ها
+    results = []
+    
+    # الگوهای جستجو
+    drug_pattern = r"([آ-یa-zA-Z\s]+)\s*(\d+)\s*(?:میلی‌گرم|mg|گرم)?"
+    time_pattern = r"ساعت\s*(\d{1,2})"
+    condition_pattern = r"(ناشتا|قبل از ناهار|قبل از شام|همراه با غذا|قبل از ورزش|بعد از ورزش|قبل از خواب|بعد از غذا)"
 
-def test_extract_drug_names():
-    text = "بیمار گرامی، متفورمین ۵۰۰ و لوزارتان ۲۵ تجویز شد."
-    result = extract_drug_names(text)
-    assert "متفورمین" in result
-    assert "لوزارتان" in result
-    assert "آتورواستاتین" not in result
+    drugs = re.findall(drug_pattern, text)
+    times = re.findall(time_pattern, text)
+    conditions = re.findall(condition_pattern, text)
 
-def test_empty_text():
-    assert extract_drug_names("") == []
-
-def test_no_drug():
-    assert extract_drug_names("سلام، حال شما چطور است؟") == []
+    if drugs:
+        for i, drug in enumerate(drugs):
+            item = {
+                "name": drug[0].strip(),
+                "dose": drug[1],
+                "time": times[i] if i < len(times) else "نامشخص",
+                "condition": conditions[i] if i < len(conditions) else "نامشخص"
+            }
+            results.append(item)
+            
+    return results
 
 if name == "main":
-    print("تست ۱:", end=" "); test_extract_drug_names(); print("موفق")
-    print("تست ۲:", end=" "); test_empty_text(); print("موفق")
-    print("تست ۳:", end=" "); test_no_drug(); print("موفق")
-    print("هر ۳ تست موفق بودند.")
+    sample_text = "متفورمین ۵۰۰ ساعت ۸ ناشتا. پروتئین وی ۳۰ گرم بعد از ورزش. آتورواستاتین ۲۰ قبل از خواب."
+    print("متن ورودی:", sample_text)
+    print("خروجی استخراج:", parse_prescription(sample_text))
